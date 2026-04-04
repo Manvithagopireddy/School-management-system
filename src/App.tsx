@@ -39,6 +39,7 @@ import AIDigest from '@/components/ai/AIDigest';
 import AIFlashcards from '@/components/ai/AIFlashcards';
 import AILessonArchitect from '@/components/ai/AILessonArchitect';
 import WellbeingTracker from '@/components/ai/WellbeingTracker';
+import ClassroomGrid from '@/components/ai/ClassroomGrid';
 import NexusVoice from '@/components/ai/NexusVoice';
 import Students from '@/components/Students';
 import Teachers from '@/components/Teachers';
@@ -110,9 +111,9 @@ const App = () => {
     teacher: [
       { section: 'Edu Console', items: [
         { id: 'dashboard', icon: LayoutDashboard, label: 'Class Overview', path: '/' },
+        { id: 'classroom-grid', icon: Users, label: 'Live Classroom', path: '/classroom-grid' },
         { id: 'ai-lesson-architect', icon: Layout, label: 'Lesson Architect', path: '/ai-lesson-architect' },
         { id: 'ai-insights', icon: Brain, label: 'AI Class Analysis', path: '/ai-insights' },
-        { id: 'classes', icon: School, label: 'My Classes', path: '/classes' },
       ]},
       { section: 'Assessments', items: [
         { id: 'assignments', icon: ClipboardList, label: 'Assignments', path: '/assignments', badge: 5 },
@@ -261,6 +262,7 @@ const App = () => {
             <Route path="/ai-planner" element={<AIPlanner />} />
             <Route path="/ai-flashcards" element={<AIFlashcards />} />
             <Route path="/ai-lesson-architect" element={<AILessonArchitect />} />
+            <Route path="/classroom-grid" element={<ClassroomGrid />} />
             <Route path="/wellbeing-tracker" element={<WellbeingTracker />} />
             <Route path="/ai-insights" element={<AIInsights />} />
             <Route path="/ai-digest" element={<AIDigest />} />
