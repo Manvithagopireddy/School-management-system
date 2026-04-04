@@ -7,6 +7,7 @@ import { dirname, resolve } from 'node:path'
 const __dirname = dirname(fileURLToPath(import.meta.url))
 
 export default defineConfig({
+  base: '/School-management-system/',
   plugins: [react(), tailwindcss()],
   resolve: {
     alias: {
