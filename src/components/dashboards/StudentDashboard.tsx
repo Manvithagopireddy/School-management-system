@@ -2,7 +2,7 @@ import {
   TrendingUp, Calendar, BookOpen, 
   Target, GraduationCap, Flame,
   CheckCircle2, Clock, Award, Star,
-  Sparkles, Brain, Zap, ArrowRight, ClipboardList
+  Sparkles, Brain, Zap, ArrowRight, ClipboardList, Users
 } from 'lucide-react';
 import { Link } from 'react-router-dom';
 import { motion } from 'motion/react';
@@ -86,6 +86,61 @@ const StudentDashboard = () => {
             </div>
         </div>
       </motion.div>
+
+      <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
+        {/* 🧘 Focus Mode: Pomodoro AI */}
+        <div className="card-premium p-8 bg-gradient-to-br from-indigo-900/40 to-transparent border-primary/20 flex flex-col justify-between group">
+           <div className="flex justify-between items-start mb-6">
+              <div>
+                 <div className="flex items-center gap-2 mb-1 text-primary font-black uppercase tracking-[0.2em] text-[10px]">
+                   <Sparkles size={14} /> Cognitive Focus
+                 </div>
+                 <h3 className="text-2xl font-black font-serif italic text-white leading-none">Focus Mode: Deep Work</h3>
+              </div>
+              <div className="flex flex-col items-end">
+                 <p className="text-2xl font-black tracking-tighter text-white">25:00</p>
+                 <p className="text-[9px] text-muted font-bold uppercase tracking-widest">Pomodoro</p>
+              </div>
+           </div>
+           
+           <div className="flex gap-4 items-center mb-8">
+              <div className="flex-1 h-2 bg-white/5 rounded-full overflow-hidden border border-white/5">
+                 <motion.div initial={{ width: '0%' }} animate={{ width: '65%' }} className="h-full bg-primary shadow-[0_0_15px_#f5c842]" />
+              </div>
+              <span className="text-[10px] font-black text-primary uppercase tracking-widest">Earn +50 Credits</span>
+           </div>
+
+           <div className="flex gap-3">
+              <button className="flex-1 py-4 bg-primary text-navy font-black text-xs rounded-2xl shadow-xl shadow-primary/20 hover:scale-[1.02] active:scale-95 transition-all">Start Focus Session</button>
+              <button className="px-6 py-4 bg-white/5 border border-white/10 text-white font-bold text-xs rounded-2xl hover:bg-white/10 transition-all">Settings</button>
+           </div>
+        </div>
+
+        {/* 🤝 Nexus Study Matchmaker */}
+        <div className="card-nexus p-8 flex flex-col gap-6 group hover:border-teal-400/20 transition-all">
+           <div className="flex justify-between items-start">
+              <h3 className="text-xl font-bold flex items-center gap-3">
+                <Users className="text-teal-400" size={24} /> Study Matchmaker
+              </h3>
+              <span className="px-3 py-1 bg-teal-400/10 text-teal-400 rounded-full text-[9px] font-black uppercase tracking-widest border border-teal-400/20">2 active Groups</span>
+           </div>
+           
+           <div className="flex items-center gap-4 p-5 rounded-2xl bg-white/3 border border-white/5 hover:bg-white/5 transition-all cursor-pointer">
+              <div className="flex -space-x-3">
+                 {[1,2,3].map(i => <div key={i} className="w-9 h-9 rounded-full border-2 border-navy bg-white/10 flex items-center justify-center text-[10px] font-bold">U{i}</div>)}
+              </div>
+              <div className="flex-1">
+                 <p className="text-sm font-bold text-white">Calculus: Integration Prep</p>
+                 <p className="text-[10px] text-muted font-medium">3 members · Guided by Nexus AI</p>
+              </div>
+              <ArrowRight size={18} className="text-muted group-hover:text-teal-400" />
+           </div>
+
+           <Link to="/ai-flashcards" className="w-full py-4 border border-teal-400/20 bg-teal-400/5 text-teal-400 font-black text-[10px] rounded-2xl hover:bg-teal-400 hover:text-navy transition-all uppercase tracking-widest flex items-center justify-center gap-2">
+             <Brain size={16} /> Open AI Flashcard Deck
+           </Link>
+        </div>
+      </div>
 
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
         {/* Radar Performance */}

@@ -17,7 +17,11 @@ import {
   CreditCard,
   Target,
   Sparkles,
-  Brain
+  Brain,
+  Mic,
+  Activity,
+  Layout,
+  ShieldCheck
 } from 'lucide-react';
 import { motion, AnimatePresence } from 'motion/react';
 import { useState } from 'react';
@@ -32,6 +36,10 @@ import ParentDashboard from '@/components/dashboards/ParentDashboard';
 import AIPlanner from '@/components/ai/AIPlanner';
 import AIInsights from '@/components/ai/AIInsights';
 import AIDigest from '@/components/ai/AIDigest';
+import AIFlashcards from '@/components/ai/AIFlashcards';
+import AILessonArchitect from '@/components/ai/AILessonArchitect';
+import WellbeingTracker from '@/components/ai/WellbeingTracker';
+import NexusVoice from '@/components/ai/NexusVoice';
 import Students from '@/components/Students';
 import Teachers from '@/components/Teachers';
 import Schedule from '@/components/Schedule';
@@ -67,7 +75,7 @@ const SidebarItem = ({ icon: Icon, label, path, active, badge }: { icon: any, la
 const App = () => {
   const { user, logout } = useAuth();
   const location = useLocation();
-  const [isNotificationsOpen, setIsNotificationsOpen] = useState(false);
+  const [isVoiceOpen, setIsVoiceOpen] = useState(false);
 
   if (!user) {
     return <Login />;
@@ -89,6 +97,7 @@ const App = () => {
       { section: 'Main Console', items: [
         { id: 'dashboard', icon: LayoutDashboard, label: 'My Hub', path: '/' },
         { id: 'ai-planner', icon: Sparkles, label: 'AI Study Planner', path: '/ai-planner' },
+        { id: 'ai-flashcards', icon: Brain, label: 'AI Flashcards', path: '/ai-flashcards' },
         { id: 'schedule', icon: Calendar, label: 'Daily Schedule', path: '/schedule' },
         { id: 'grades', icon: Target, label: 'Grades & GPA', path: '/grades' },
       ]},
@@ -101,9 +110,9 @@ const App = () => {
     teacher: [
       { section: 'Edu Console', items: [
         { id: 'dashboard', icon: LayoutDashboard, label: 'Class Overview', path: '/' },
+        { id: 'ai-lesson-architect', icon: Layout, label: 'Lesson Architect', path: '/ai-lesson-architect' },
         { id: 'ai-insights', icon: Brain, label: 'AI Class Analysis', path: '/ai-insights' },
         { id: 'classes', icon: School, label: 'My Classes', path: '/classes' },
-        { id: 'students', icon: Users, label: 'Student Roster', path: '/students' },
       ]},
       { section: 'Assessments', items: [
         { id: 'assignments', icon: ClipboardList, label: 'Assignments', path: '/assignments', badge: 5 },
@@ -114,13 +123,13 @@ const App = () => {
     parent: [
       { section: 'Child Snapshot', items: [
         { id: 'dashboard', icon: LayoutDashboard, label: 'Progress Hub', path: '/' },
+        { id: 'wellbeing-tracker', icon: ShieldCheck, label: 'Child Well-being', path: '/wellbeing-tracker' },
         { id: 'ai-digest', icon: Sparkles, label: 'AI Daily Digest', path: '/ai-digest' },
         { id: 'grades', icon: Target, label: 'Child Results', path: '/grades' },
-        { id: 'fees', icon: CreditCard, label: 'Fee Portal', path: '/fees' },
       ]},
-      { section: 'Community', items: [
+      { section: 'Finances', items: [
+        { id: 'fees', icon: CreditCard, label: 'Fee Portal', path: '/fees' },
         { id: 'messages', icon: MessageSquare, label: 'Parent Chat', path: '/messages', badge: 1 },
-        { id: 'schedule', icon: Calendar, label: 'Events & PTM', path: '/schedule' },
       ]}
     ]
   };
@@ -136,6 +145,8 @@ const App = () => {
         <div className="orb orb3"></div>
       </div>
 
+      <NexusVoice isOpen={isVoiceOpen} onClose={() => setIsVoiceOpen(false)} />
+
       {/* Sidebar - EduNexus Style */}
       <aside className="w-[280px] glass border-r border-white/5 flex flex-col pt-10 pb-8 shrink-0 z-30 shadow-2xl relative overflow-hidden">
         <div className="absolute top-0 right-0 w-[1px] h-full bg-gradient-to-b from-white/10 via-white/5 to-transparent" />
@@ -143,7 +154,7 @@ const App = () => {
           <div className="w-11 h-11 gradient-bg rounded-[1.25rem] flex items-center justify-center text-xl shadow-xl border border-white/20">
             🎓
           </div>
-          <h1 className="font-serif text-2xl font-black tracking-tight">
+          <h1 className="font-serif text-2xl font-black tracking-tight text-white">
             Edu<span className="text-primary">Nexus</span>
           </h1>
         </div>
@@ -202,11 +213,18 @@ const App = () => {
             <input 
               type="text" 
               placeholder="Search intelligence..." 
-              className="w-full bg-white/3 border border-white/5 rounded-2xl py-2.5 pl-11 pr-4 text-white placeholder-white/20 focus:outline-none focus:border-primary/30 transition-all font-medium text-xs"
+              className="w-full bg-white/3 border border-white/5 rounded-2xl py-2.5 pl-11 pr-4 text-white placeholder-white/20 focus:outline-none focus:border-primary/30 transition-all font-medium text-xs shadow-inner"
             />
           </div>
 
           <div className="flex items-center gap-6">
+            <button 
+              onClick={() => setIsVoiceOpen(true)}
+              className="h-11 w-11 bg-primary/10 border border-primary/20 rounded-2xl flex items-center justify-center text-primary hover:bg-primary hover:text-navy transition-all shadow-xl shadow-primary/5 active:scale-95 group"
+            >
+              <Mic size={20} className="group-hover:scale-110 transition-transform" />
+            </button>
+
             <button className="h-11 w-11 glass rounded-2xl flex items-center justify-center text-white/70 hover:text-white hover:bg-white/15 transition-all relative">
               <Bell size={20} />
               <span className="absolute top-3 right-3 w-2.5 h-2.5 bg-rose-500 rounded-full border-2 border-[#122040]"></span>
@@ -241,6 +259,9 @@ const App = () => {
             <Route path="/messages" element={<Messages />} />
             <Route path="/settings" element={<SettingsView />} />
             <Route path="/ai-planner" element={<AIPlanner />} />
+            <Route path="/ai-flashcards" element={<AIFlashcards />} />
+            <Route path="/ai-lesson-architect" element={<AILessonArchitect />} />
+            <Route path="/wellbeing-tracker" element={<WellbeingTracker />} />
             <Route path="/ai-insights" element={<AIInsights />} />
             <Route path="/ai-digest" element={<AIDigest />} />
             <Route path="/grades" element={<Grades />} />

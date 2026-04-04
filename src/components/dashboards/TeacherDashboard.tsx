@@ -2,7 +2,7 @@ import {
   Users, School, ClipboardList, 
   Target, MessageSquare, Calendar,
   TrendingUp, CheckCircle2, AlertCircle, Clock,
-  Sparkles, Brain, Zap, ArrowRight, BarChart3
+  Sparkles, Brain, Zap, ArrowRight, BarChart3, Layout, Send
 } from 'lucide-react';
 import { Link } from 'react-router-dom';
 import { motion } from 'motion/react';
@@ -12,13 +12,6 @@ import { AreaChart, Area, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContai
 const performanceData = [
   { name: 'Mon', avg: 72 }, { name: 'Tue', avg: 78 }, { name: 'Wed', avg: 65 },
   { name: 'Thu', avg: 88 }, { name: 'Fri', avg: 82 },
-];
-
-const classes = [
-  { grade: 'Grade 10-A', sub: 'Mathematics', count: 38, room: '201', avg: 88, color: '#f5c842' },
-  { grade: 'Grade 10-B', sub: 'Mathematics', count: 36, room: '203', avg: 82, color: '#2dd4bf' },
-  { grade: 'Grade 9-A',  sub: 'Science',    count: 35, room: 'Lab 2', avg: 79, color: '#a78bfa' },
-  { grade: 'Grade 9-B',  sub: 'Science',    count: 33, room: 'Lab 2', avg: 85, color: '#4ade80'  },
 ];
 
 const StudentRow = ({ name, roll, gpa, att, status, color }: any) => (
@@ -68,10 +61,46 @@ const TeacherDashboard = () => {
            Review Insights <ArrowRight size={14} />
         </Link>
       </motion.div>
-      {/* Welcome */}
+
       <div className="flex flex-col gap-1">
-        <h2 className="text-4xl font-black font-serif tracking-tight">Welcome back, Dr. Priya 👩‍🏫</h2>
+        <h2 className="text-4xl font-black font-serif tracking-tight text-white">Welcome back, Dr. Priya 👩‍🏫</h2>
         <p className="text-muted font-medium">Mathematics & Science Department · <span className="text-primary font-bold">4 active classes</span> today</p>
+      </div>
+
+      {/* 🔮 AI Operations Row */}
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+         <Link to="/ai-lesson-architect" className="card-premium p-8 bg-gradient-to-br from-teal-400/10 to-transparent border-teal-400/20 group hover:scale-[1.01] transition-all">
+            <div className="flex justify-between items-start mb-6">
+               <div className="w-12 h-12 rounded-2xl bg-teal-400/10 flex items-center justify-center text-teal-400">
+                  <Layout size={24} />
+               </div>
+               <span className="px-3 py-1 bg-teal-400/10 text-teal-400 rounded-full text-[9px] font-black uppercase tracking-widest border border-teal-400/20">NEW MODULE</span>
+            </div>
+            <h3 className="text-2xl font-black font-serif italic mb-2 text-white">Launch Lesson Architect</h3>
+            <p className="text-xs text-muted leading-relaxed mb-6">Automate your syllabus-aligned lesson plans, presentation slides, and quizzes with Nexus Gen-AI.</p>
+            <div className="flex items-center gap-2 text-[10px] font-black text-teal-400 uppercase tracking-widest">
+               Create Blueprint <ArrowRight size={14} />
+            </div>
+         </Link>
+
+         <div className="card-nexus p-8 border-violet-400/20 bg-gradient-to-br from-violet-400/5 to-transparent flex flex-col justify-between group cursor-pointer hover:border-violet-400/40 transition-all">
+            <div className="flex justify-between items-start mb-6">
+               <div className="w-12 h-12 rounded-2xl bg-violet-400/10 flex items-center justify-center text-violet-400">
+                  <Brain size={24} />
+               </div>
+               <div className="flex gap-2">
+                  <div className="w-2 h-2 rounded-full bg-violet-400 ai-pulse" />
+                  <span className="text-[9px] font-black text-violet-400 uppercase tracking-widest">Active Assistant</span>
+               </div>
+            </div>
+            <div>
+               <h3 className="text-xl font-bold mb-2 text-white">Subjective Grading Logic</h3>
+               <p className="text-xs text-muted leading-relaxed mb-6">AI-suggested feedback loop is active for 38 new Math submissions. Consistent marking enabled.</p>
+            </div>
+            <button className="w-full py-3 bg-violet-400 text-navy font-black text-[10px] rounded-xl uppercase tracking-widest shadow-lg shadow-violet-400/10 transition-all hover:bg-violet-300">
+               Batch Review Submissions
+            </button>
+         </div>
       </div>
 
       {/* Stats */}
@@ -86,7 +115,7 @@ const TeacherDashboard = () => {
             <div className="w-12 h-12 rounded-2xl bg-white/5 flex items-center justify-center mb-5">
               <s.icon size={26} style={{ color: s.color }} />
             </div>
-            <p className="text-3xl font-black tracking-tighter mb-1">{s.value}</p>
+            <p className="text-3xl font-black tracking-tighter mb-1 text-white">{s.value}</p>
             <p className="text-[11px] text-muted font-bold uppercase tracking-widest">{s.label}</p>
             <p className="text-[10px] mt-2 font-bold" style={{ color: s.color }}>{s.sub}</p>
           </motion.div>
@@ -97,7 +126,7 @@ const TeacherDashboard = () => {
         {/* Performance Graph */}
         <div className="lg:col-span-2 card-nexus p-8">
           <div className="flex justify-between items-center mb-10">
-             <h3 className="text-xl font-bold flex items-center gap-2 font-serif">
+             <h3 className="text-xl font-bold flex items-center gap-2 font-serif text-white">
                <TrendingUp className="text-primary" size={20} /> Class Performance Trend
              </h3>
              <div className="flex gap-2">
@@ -125,7 +154,7 @@ const TeacherDashboard = () => {
 
         {/* Quick Actions */}
         <div className="card-nexus p-8 flex flex-col gap-6">
-           <h3 className="text-xl font-bold flex items-center gap-2 mb-4 font-serif">
+           <h3 className="text-xl font-bold flex items-center gap-2 mb-4 font-serif text-white">
              <Target className="text-teal-400" size={22} /> Instant Actions
            </h3>
            <div className="flex flex-col gap-3 flex-1">
@@ -153,7 +182,7 @@ const TeacherDashboard = () => {
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
         <div className="lg:col-span-2 card-nexus p-8 overflow-hidden">
            <div className="flex justify-between items-center mb-8">
-              <h3 className="text-xl font-bold flex items-center gap-2 font-serif">
+              <h3 className="text-xl font-bold flex items-center gap-2 font-serif text-white">
                 <Users className="text-primary" size={20} /> Class 10-A Roster
               </h3>
               <button className="text-xs font-bold text-primary hover:underline">View All Students</button>
@@ -182,23 +211,26 @@ const TeacherDashboard = () => {
 
         {/* Assignment Queue */}
         <div className="card-nexus p-8 flex flex-col gap-6">
-           <h3 className="text-xl font-bold flex items-center gap-2 mb-2 font-serif">
+           <h3 className="text-xl font-bold flex items-center gap-2 mb-2 font-serif text-white">
              <ClipboardList className="text-rose-400" size={20} /> Grading Queue
            </h3>
            <div className="space-y-4 flex-1">
              {[
-               { title: 'Math Problem Set 12 – 10A', sub: '38 Submissions', due: 'Review', color: '#fb7185' },
-               { title: 'Physics Lab Report – 10B',  sub: '32/36 Submitted',  due: 'Grade',  color: '#f5c842' },
-               { title: 'Statistics Quiz – 10A',      sub: '38/38 Submitted',  due: 'Final',  color: '#2dd4bf' },
-               { title: 'Chem Chapter 8 – 9A',       sub: '28/35 Submitted',  due: 'Review', color: '#a78bfa' },
+               { title: 'Math Problem Set 12 – 10A', sub: '38 Submissions', due: 'Review', color: '#fb7185', ai: true },
+               { title: 'Physics Lab Report – 10B',  sub: '32/36 Submitted',  due: 'Grade',  color: '#f5c842', ai: true },
+               { title: 'Statistics Quiz – 10A',      sub: '38/38 Submitted',  due: 'Final',  color: '#2dd4bf', ai: false },
+               { title: 'Chem Chapter 8 – 9A',       sub: '28/35 Submitted',  due: 'Review', color: '#a78bfa', ai: false },
              ].map(a => (
-               <div key={a.title} className="flex items-center gap-4 p-4 rounded-2xl bg-white/5 border border-white/5 transition-all group cursor-pointer hover:border-white/10">
+               <div key={a.title} className="flex items-center gap-4 p-4 rounded-2xl bg-white/3 border border-white/5 transition-all group cursor-pointer hover:border-white/10">
                   <div className="w-10 h-10 rounded-xl bg-white/5 flex items-center justify-center shrink-0">
                     <Clock size={16} className="text-muted group-hover:text-white transition-colors" />
                   </div>
                   <div className="flex-1 min-w-0">
-                    <p className="text-xs font-bold truncate group-hover:text-primary transition-colors">{a.title}</p>
-                    <p className="text-[10px] text-muted font-bold mt-1 uppercase tracking-wider">{a.sub}</p>
+                    <div className="flex items-center gap-2 mb-0.5">
+                       <p className="text-xs font-bold truncate group-hover:text-primary transition-colors text-white">{a.title}</p>
+                       {a.ai && <Sparkles size={10} className="text-violet-400" />}
+                    </div>
+                    <p className="text-[10px] text-muted font-bold uppercase tracking-wider">{a.sub}</p>
                   </div>
                   <span className="text-[9px] font-black uppercase px-2 py-1 rounded-lg bg-white/5 text-white/40 group-hover:bg-primary/10 group-hover:text-primary transition-all">
                     {a.due}

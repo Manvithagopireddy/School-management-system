@@ -1,7 +1,8 @@
 import { 
   TrendingUp, CheckCircle2, Clock, 
   CreditCard, Calendar, MessageSquare,
-  Award, BookOpen, Sparkles, Brain, Zap, ArrowRight, ShieldCheck
+  Award, BookOpen, Sparkles, Brain, Zap, ArrowRight, ShieldCheck,
+  Activity, Coffee, Sun
 } from 'lucide-react';
 import { Link } from 'react-router-dom';
 import { motion } from 'motion/react';
@@ -49,14 +50,63 @@ const ParentDashboard = () => {
               <p className="text-xs text-muted">Intense Math sessions detected. AI suggests 45m digital detox at 7 PM.</p>
            </div>
         </div>
-        <Link to="/ai-digest" className="flex items-center gap-2 px-6 py-3 bg-violet-400 text-navy rounded-xl font-black text-xs hover:scale-105 transition-all shadow-lg shadow-violet-400/20">
-           Review Digest <ArrowRight size={14} />
+        <Link to="/wellbeing-tracker" className="flex items-center gap-2 px-6 py-3 bg-violet-400 text-navy rounded-xl font-black text-xs hover:scale-105 transition-all shadow-lg shadow-violet-400/20">
+           Review Well-being <ArrowRight size={14} />
         </Link>
       </motion.div>
+
       {/* Header */}
       <div className="flex flex-col gap-1">
-        <h2 className="text-4xl font-black font-serif tracking-tight">Hello, {user?.name.split(' ')[0]} 👨‍👩‍👧</h2>
-        <p className="text-muted font-medium">Monitoring progress for <span className="text-primary font-bold">{user?.childName}</span> · Grade 10-A</p>
+        <h2 className="text-4xl font-black font-serif tracking-tight text-white">Hello, {user?.name.split(' ')[0]} 👨‍👩‍👧</h2>
+        <p className="text-muted font-medium">Monitoring progress for <span className="text-primary font-bold">{user?.childName || 'Arjun'}</span> · Grade 10-A</p>
+      </div>
+
+      {/* Holistic Intelligence Section */}
+      <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
+         {/* Well-being Summary */}
+         <div className="card-premium p-8 bg-gradient-to-br from-violet-900/20 to-transparent border-violet-500/20">
+            <h3 className="text-xl font-bold flex items-center gap-3 mb-8 text-white">
+               <Activity className="text-violet-400" size={24} /> Holistic Growth Intelligence
+            </h3>
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-8 mb-8">
+               <div className="p-5 rounded-2xl bg-white/3 border border-white/5">
+                  <div className="flex justify-between items-center mb-4">
+                     <p className="text-[10px] font-black text-muted uppercase tracking-widest leading-none">Cognitive Load</p>
+                     <Zap size={14} className="text-primary" />
+                  </div>
+                  <p className="text-2xl font-black text-white">High (88%)</p>
+                  <p className="text-[9px] text-primary font-bold mt-1">Requires Break</p>
+               </div>
+               <div className="p-5 rounded-2xl bg-white/3 border border-white/5">
+                  <div className="flex justify-between items-center mb-4">
+                     <p className="text-[10px] font-black text-muted uppercase tracking-widest leading-none">Digital Fatigue</p>
+                     <Coffee size={14} className="text-teal-400" />
+                  </div>
+                  <p className="text-2xl font-black text-white">Moderate</p>
+                  <p className="text-[9px] text-teal-400 font-bold mt-1">45m session limit</p>
+               </div>
+            </div>
+            <button className="w-full py-4 border border-violet-400/20 bg-violet-400/5 text-violet-400 font-black text-[10px] rounded-xl hover:bg-violet-400 hover:text-navy transition-all uppercase tracking-widest">
+               Open Well-being Dashboard 🚀
+            </button>
+         </div>
+
+         {/* Academic Consistency Milestone */}
+         <div className="card-nexus p-8 flex flex-col justify-between group hover:border-primary/20 transition-all cursor-pointer">
+            <div className="flex justify-between items-start">
+               <div className="w-12 h-12 rounded-2xl bg-white/3 flex items-center justify-center text-primary border border-white/5 group-hover:scale-110 transition-transform">
+                  <Award size={26} />
+               </div>
+               <span className="px-3 py-1 bg-emerald-500/10 text-emerald-400 rounded-full text-[9px] font-black uppercase tracking-widest border border-emerald-500/20 italic">Validated</span>
+            </div>
+            <div>
+               <h3 className="text-xl font-bold mb-1 text-white">Scholar Platinum Milestone</h3>
+               <p className="text-xs text-muted">Arjun is in the **Top 5%** for academic consistency this term. Blockchain certificate issued.</p>
+            </div>
+            <div className="flex items-center gap-2 text-[10px] font-black text-primary uppercase tracking-[0.2em] mt-4">
+               View Blockchain Proof <ArrowRight size={14} />
+            </div>
+         </div>
       </div>
 
       {/* Stats Grid */}
@@ -65,7 +115,7 @@ const ParentDashboard = () => {
           { icon: TrendingUp, value: '86.4%', label: 'Current GPA',  change: 'Term 2 Avg', color: '#f5c842' },
           { icon: CheckCircle2, value: '94%',   label: 'Attendance',   change: '28/30 days',  color: '#2dd4bf' },
           { icon: Clock,      value: '3',      label: 'Pending Tasks', change: 'Assignments',  color: '#fb7185' },
-          { icon: Award,      value: '2nd',    label: 'Class Rank',    change: 'Top 5%',      color: '#a78bfa' },
+          { icon: Sun,        value: 'Optimal', label: 'Mental State', change: 'Consistent',  color: '#a78bfa' },
         ].map((s, i) => (
           <motion.div 
             initial={{ opacity: 0, y: 20 }}
@@ -74,10 +124,10 @@ const ParentDashboard = () => {
             key={s.label} 
             className="card-nexus p-7 shadow-xl shadow-black/20 hover:shadow-primary/5 transition-all group"
           >
-            <div className="w-12 h-12 rounded-2xl bg-white/5 flex items-center justify-center mb-5 group-hover:scale-110 transition-transform">
+            <div className="w-12 h-12 rounded-2xl bg-white/5 flex items-center justify-center mb-5 group-hover:scale-110 transition-transform text-white">
               <s.icon size={26} style={{ color: s.color }} />
             </div>
-            <p className="text-3xl font-black tracking-tighter mb-1">{s.value}</p>
+            <p className="text-3xl font-black tracking-tighter mb-1 text-white">{s.value}</p>
             <p className="text-[11px] text-muted font-bold uppercase tracking-widest">{s.label}</p>
             <p className="text-[10px] mt-2 font-bold" style={{ color: s.color }}>{s.change}</p>
           </motion.div>
@@ -88,7 +138,7 @@ const ParentDashboard = () => {
         {/* Academic Performance */}
         <div className="lg:col-span-2 card-nexus p-8">
           <div className="flex justify-between items-center mb-8">
-             <h3 className="text-xl font-bold flex items-center gap-2">
+             <h3 className="text-xl font-bold flex items-center gap-2 text-white">
                <BookOpen className="text-primary" size={20} /> Subject Performance
              </h3>
              <span className="text-xs font-bold text-muted bg-white/5 px-3 py-1.5 rounded-full">Report Card ▾</span>
@@ -105,7 +155,7 @@ const ParentDashboard = () => {
 
         {/* Fees Section */}
         <div className="card-nexus p-8 flex flex-col gap-6">
-           <h3 className="text-xl font-bold flex items-center gap-2">
+           <h3 className="text-xl font-bold flex items-center gap-2 text-white">
              <CreditCard className="text-rose-400" size={20} /> Fee Summary
            </h3>
            <div className="space-y-4">
@@ -116,7 +166,7 @@ const ParentDashboard = () => {
              ].map(f => (
                <div key={f.name} className="flex justify-between items-center p-4 rounded-2xl bg-white/5 border border-white/5 hover:border-white/10 transition-all">
                   <div>
-                    <p className="text-xs font-bold mb-0.5">{f.name}</p>
+                    <p className="text-xs font-bold mb-0.5 text-white">{f.name}</p>
                     <p className="text-[10px] text-muted font-medium">Due {f.due}</p>
                   </div>
                   <div className="text-right">
@@ -128,70 +178,9 @@ const ParentDashboard = () => {
                </div>
              ))}
            </div>
-           <button className="w-full py-3.5 bg-primary text-navy font-bold rounded-2xl shadow-lg shadow-primary/20 hover:scale-[1.02] active:scale-95 transition-all text-sm mt-2">
+           <button className="w-full py-4 bg-primary text-navy font-bold rounded-2xl shadow-lg shadow-primary/20 hover:scale-[1.02] active:scale-95 transition-all text-sm mt-2">
              Pay Outstanding Fees
            </button>
-        </div>
-      </div>
-
-      <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
-        {/* Events */}
-        <div className="card-nexus p-8">
-           <h3 className="text-xl font-bold flex items-center gap-2 mb-8">
-             <Calendar className="text-violet-400" size={20} /> Upcoming School Events
-           </h3>
-           <div className="space-y-4">
-              {[
-                { title: 'Parent-Teacher Meeting', date: 'April 12', time: '9AM–1PM', loc: 'Auditorium', color: '#f5c842' },
-                { title: 'Annual Sports Day',      date: 'April 20', time: 'Full Day', loc: 'Grounds', color: '#2dd4bf' },
-                { title: 'Science Fair 2026',      date: 'April 25', time: '10AM–4PM', loc: 'Main Hall', color: '#a78bfa' },
-              ].map(e => (
-                <div key={e.title} className="flex gap-4 p-5 rounded-2xl bg-white/5 border-l-4" style={{ borderColor: e.color }}>
-                   <div className="flex flex-col items-center justify-center bg-white/5 w-14 h-14 rounded-xl border border-white/5">
-                      <p className="text-[10px] font-black uppercase text-muted leading-tight">{e.date.split(' ')[0]}</p>
-                      <p className="text-lg font-black tracking-tighter leading-tight" style={{ color: e.color }}>{e.date.split(' ')[1]}</p>
-                   </div>
-                   <div className="flex-1">
-                      <p className="text-sm font-bold mb-1">{e.title}</p>
-                      <p className="text-[11px] text-muted flex items-center gap-1.5">
-                         <span className="font-bold" style={{ color: e.color }}>{e.time}</span> · {e.loc}
-                      </p>
-                   </div>
-                   <button className="self-center p-2 rounded-xl bg-white/5 text-muted hover:text-white transition-all">
-                      <Calendar size={18} />
-                   </button>
-                </div>
-              ))}
-           </div>
-        </div>
-
-        {/* Messaging */}
-        <div className="card-nexus p-8">
-          <div className="flex justify-between items-center mb-8">
-             <h3 className="text-xl font-bold flex items-center gap-2">
-               <MessageSquare className="text-primary" size={20} /> Teacher Communications
-             </h3>
-             <button className="text-xs font-bold text-primary hover:underline">New Message</button>
-          </div>
-          <div className="space-y-6">
-             {[
-               { from: 'Dr. Priya Nair', icon: '👩‍🏫', msg: "Arjun has shown great improvement this term in Maths!", time: 'Yesterday', color: '#f5c842' },
-               { from: 'Principal Dr. Mehta', icon: '🏫', msg: "PTM invitation for April 12. Please confirm your attendance.", time: '2 days ago', color: '#2dd4bf' },
-             ].map(m => (
-               <div key={m.from} className="flex gap-4 group cursor-pointer">
-                  <div className="w-12 h-12 rounded-full border-2 bg-white/5 flex items-center justify-center text-xl shadow-inner group-hover:scale-105 transition-all" style={{ borderColor: m.color }}>
-                    {m.icon}
-                  </div>
-                  <div className="flex-1 border-b border-white/5 pb-5">
-                    <div className="flex justify-between items-center mb-1.5">
-                       <p className="text-sm font-bold hover:text-primary transition-colors">{m.from}</p>
-                       <p className="text-[10px] text-muted font-bold uppercase">{m.time}</p>
-                    </div>
-                    <p className="text-[13px] text-muted leading-relaxed line-clamp-1">{m.msg}</p>
-                  </div>
-               </div>
-             ))}
-          </div>
         </div>
       </div>
     </div>
