@@ -2,11 +2,13 @@ import {
   TrendingUp, Calendar, BookOpen, 
   Target, GraduationCap, Flame,
   CheckCircle2, Clock, Award, Star,
-  Sparkles, Brain, Zap, ArrowRight, ClipboardList, Users
+  Sparkles, Brain, Zap, ArrowRight, ClipboardList, Users,
+  Play, Pause, RotateCcw, Settings, X
 } from 'lucide-react';
 import { Link } from 'react-router-dom';
-import { motion } from 'motion/react';
+import { motion, AnimatePresence } from 'motion/react';
 import { useAuth } from '@/context/AuthContext';
+import { useState, useEffect, useRef } from 'react';
 import { RadarChart, Radar, PolarGrid, PolarAngleAxis, ResponsiveContainer, Tooltip } from 'recharts';
 
 const subjectScores = [
@@ -24,6 +26,141 @@ const assignments = [
   { title: 'History Essay Draft',     subject: 'History',     due: 'Apr 6',           done: false, urgent: false },
   { title: 'CS Project - Sorting',    subject: 'CS',          due: 'Submitted Apr 2',  done: true,  urgent: false },
 ];
+
+const DURATIONS = [25, 45, 60];
+
+const FocusModeCard = () => {
+  const [durationMin, setDurationMin] = useState(25);
+  const [secondsLeft, setSecondsLeft] = useState(25 * 60);
+  const [running, setRunning] = useState(false);
+  const [done, setDone] = useState(false);
+  const [showSettings, setShowSettings] = useState(false);
+  const timerRef = useRef<ReturnType<typeof setInterval> | null>(null);
+
+  const total = durationMin * 60;
+  const pct   = Math.round(((total - secondsLeft) / total) * 100);
+  const mins  = String(Math.floor(secondsLeft / 60)).padStart(2, '0');
+  const secs  = String(secondsLeft % 60).padStart(2, '0');
+
+  useEffect(() => {
+    if (running) {
+      timerRef.current = setInterval(() => {
+        setSecondsLeft(prev => {
+          if (prev <= 1) {
+            clearInterval(timerRef.current!);
+            setRunning(false);
+            setDone(true);
+            return 0;
+          }
+          return prev - 1;
+        });
+      }, 1000);
+    } else {
+      clearInterval(timerRef.current!);
+    }
+    return () => clearInterval(timerRef.current!);
+  }, [running]);
+
+  const reset = () => {
+    clearInterval(timerRef.current!);
+    setRunning(false);
+    setDone(false);
+    setSecondsLeft(durationMin * 60);
+  };
+
+  const selectDuration = (d: number) => {
+    setDurationMin(d);
+    setSecondsLeft(d * 60);
+    setRunning(false);
+    setDone(false);
+  };
+
+  return (
+    <div className="card-premium p-8 bg-gradient-to-br from-indigo-900/40 to-transparent border-primary/20 flex flex-col justify-between group">
+      <div className="flex justify-between items-start mb-4">
+        <div>
+          <div className="flex items-center gap-2 mb-1 text-primary font-black uppercase tracking-[0.2em] text-[10px]">
+            <Sparkles size={14} /> Cognitive Focus
+          </div>
+          <h3 className="text-2xl font-black font-serif italic text-white leading-none">Focus Mode: Deep Work</h3>
+        </div>
+        <div className="flex flex-col items-end">
+          <motion.p
+            key={`${mins}:${secs}`}
+            initial={{ scale: 1.1, opacity: 0.7 }}
+            animate={{ scale: 1, opacity: 1 }}
+            className={`text-3xl font-black tracking-tighter ${done ? 'text-teal-400' : running ? 'text-primary' : 'text-white'}`}
+          >
+            {done ? '✅ Done!' : `${mins}:${secs}`}
+          </motion.p>
+          <p className="text-[9px] text-muted font-bold uppercase tracking-widest">Pomodoro · {durationMin}m</p>
+        </div>
+      </div>
+
+      {/* Progress Bar */}
+      <div className="flex gap-4 items-center mb-2">
+        <div className="flex-1 h-2 bg-white/5 rounded-full overflow-hidden border border-white/5">
+          <motion.div
+            animate={{ width: `${pct}%` }}
+            transition={{ duration: 0.5 }}
+            className={`h-full rounded-full shadow-[0_0_15px_#f5c842] ${done ? 'bg-teal-400' : 'bg-primary'}`}
+          />
+        </div>
+        <span className="text-[10px] font-black text-primary uppercase tracking-widest whitespace-nowrap">
+          {done ? 'Earned +50 Credits 🎉' : `+50 Credits`}
+        </span>
+      </div>
+
+      {/* Settings Panel */}
+      <AnimatePresence>
+        {showSettings && (
+          <motion.div
+            initial={{ height: 0, opacity: 0 }}
+            animate={{ height: 'auto', opacity: 1 }}
+            exit={{ height: 0, opacity: 0 }}
+            className="overflow-hidden mb-4"
+          >
+            <div className="flex gap-2 pt-3">
+              {DURATIONS.map(d => (
+                <button
+                  key={d}
+                  onClick={() => selectDuration(d)}
+                  className={`flex-1 py-2 rounded-xl text-[11px] font-black uppercase tracking-widest transition-all ${
+                    durationMin === d ? 'bg-primary text-navy' : 'bg-white/5 text-muted hover:text-white'
+                  }`}
+                >
+                  {d}m
+                </button>
+              ))}
+            </div>
+          </motion.div>
+        )}
+      </AnimatePresence>
+
+      <div className="flex gap-3">
+        <button
+          onClick={() => { if (done) reset(); else setRunning(r => !r); }}
+          className="flex-1 py-4 bg-primary text-navy font-black text-xs rounded-2xl shadow-xl shadow-primary/20 hover:scale-[1.02] active:scale-95 transition-all flex items-center justify-center gap-2"
+        >
+          {done ? <><RotateCcw size={14} /> New Session</> : running ? <><Pause size={14} /> Pause</> : <><Play size={14} /> Start Focus Session</>}
+        </button>
+        <button
+          onClick={() => setShowSettings(s => !s)}
+          className={`px-5 py-4 border font-bold text-xs rounded-2xl transition-all ${
+            showSettings ? 'bg-primary/10 border-primary/30 text-primary' : 'bg-white/5 border-white/10 text-white hover:bg-white/10'
+          }`}
+        >
+          <Settings size={16} />
+        </button>
+        {(running || secondsLeft < total) && (
+          <button onClick={reset} className="px-5 py-4 bg-white/5 border border-white/10 text-muted font-bold text-xs rounded-2xl hover:bg-rose-400/10 hover:text-rose-400 hover:border-rose-400/20 transition-all">
+            <RotateCcw size={16} />
+          </button>
+        )}
+      </div>
+    </div>
+  );
+};
 
 const StudentDashboard = () => {
   const { user } = useAuth();
@@ -89,32 +226,7 @@ const StudentDashboard = () => {
 
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
         {/* 🧘 Focus Mode: Pomodoro AI */}
-        <div className="card-premium p-8 bg-gradient-to-br from-indigo-900/40 to-transparent border-primary/20 flex flex-col justify-between group">
-           <div className="flex justify-between items-start mb-6">
-              <div>
-                 <div className="flex items-center gap-2 mb-1 text-primary font-black uppercase tracking-[0.2em] text-[10px]">
-                   <Sparkles size={14} /> Cognitive Focus
-                 </div>
-                 <h3 className="text-2xl font-black font-serif italic text-white leading-none">Focus Mode: Deep Work</h3>
-              </div>
-              <div className="flex flex-col items-end">
-                 <p className="text-2xl font-black tracking-tighter text-white">25:00</p>
-                 <p className="text-[9px] text-muted font-bold uppercase tracking-widest">Pomodoro</p>
-              </div>
-           </div>
-           
-           <div className="flex gap-4 items-center mb-8">
-              <div className="flex-1 h-2 bg-white/5 rounded-full overflow-hidden border border-white/5">
-                 <motion.div initial={{ width: '0%' }} animate={{ width: '65%' }} className="h-full bg-primary shadow-[0_0_15px_#f5c842]" />
-              </div>
-              <span className="text-[10px] font-black text-primary uppercase tracking-widest">Earn +50 Credits</span>
-           </div>
-
-           <div className="flex gap-3">
-              <button className="flex-1 py-4 bg-primary text-navy font-black text-xs rounded-2xl shadow-xl shadow-primary/20 hover:scale-[1.02] active:scale-95 transition-all">Start Focus Session</button>
-              <button className="px-6 py-4 bg-white/5 border border-white/10 text-white font-bold text-xs rounded-2xl hover:bg-white/10 transition-all">Settings</button>
-           </div>
-        </div>
+        <FocusModeCard />
 
         {/* 🤝 Nexus Study Matchmaker */}
         <div className="card-nexus p-8 flex flex-col gap-6 group hover:border-teal-400/20 transition-all">

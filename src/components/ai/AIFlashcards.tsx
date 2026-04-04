@@ -49,6 +49,7 @@ const AIFlashcards = () => {
   const [swipeDir, setSwipeDir] = useState<'left' | 'right' | null>(null);
   const [sessionLog, setSessionLog] = useState<{ id: number; confidence: ConfidenceLevel }[]>([]);
   const [isRegenerating, setIsRegenerating] = useState(false);
+  const [filterRevise, setFilterRevise] = useState(false);
 
   const handleRegenerate = () => {
     setIsRegenerating(true);
@@ -59,6 +60,16 @@ const AIFlashcards = () => {
       setSessionLog([]);
       setIsRegenerating(false);
     }, 1300);
+  };
+
+  const handleReviewNow = () => {
+    const flagged = cards.filter(c => c.aiRevise);
+    if (flagged.length === 0) return;
+    setCards(flagged);
+    setCurrentIdx(0);
+    setIsFlipped(false);
+    setSessionLog([]);
+    setFilterRevise(true);
   };
 
   const current = cards[currentIdx];
@@ -140,22 +151,39 @@ const AIFlashcards = () => {
       </div>
 
       {/* AI Revision Alert */}
-      {aiReviseCount > 0 && (
+      {(aiReviseCount > 0 || filterRevise) && (
         <motion.div
           initial={{ opacity: 0, y: -10 }}
           animate={{ opacity: 1, y: 0 }}
-          className="flex items-center gap-4 p-5 rounded-2xl bg-rose-400/5 border border-rose-400/20"
+          className={`flex items-center gap-4 p-5 rounded-2xl border ${filterRevise ? 'bg-teal-400/5 border-teal-400/20' : 'bg-rose-400/5 border-rose-400/20'}`}
         >
-          <div className="w-10 h-10 rounded-xl bg-rose-400/10 flex items-center justify-center text-rose-400 shrink-0">
+          <div className={`w-10 h-10 rounded-xl flex items-center justify-center shrink-0 ${filterRevise ? 'bg-teal-400/10 text-teal-400' : 'bg-rose-400/10 text-rose-400'}`}>
             <AlertTriangle size={20} />
           </div>
           <div className="flex-1">
-            <p className="text-sm font-bold text-white">Nexus AI suggests: Review <span className="text-rose-400">{aiReviseCount} cards</span> before your exam</p>
-            <p className="text-[11px] text-muted mt-0.5">Physics & Chemistry have the highest concept gaps based on your confidence history.</p>
+            <p className="text-sm font-bold text-white">
+              {filterRevise
+                ? <>Showing <span className="text-teal-400">{cards.length} flagged cards</span> — review mode active</>
+                : <>Nexus AI suggests: Review <span className="text-rose-400">{aiReviseCount} cards</span> before your exam</>
+              }
+            </p>
+            <p className="text-[11px] text-muted mt-0.5">Physics &amp; Chemistry have the highest concept gaps based on your confidence history.</p>
           </div>
-          <button className="px-4 py-2 bg-rose-400/10 text-rose-400 border border-rose-400/20 rounded-xl text-[10px] font-black uppercase tracking-widest hover:bg-rose-400 hover:text-white transition-all shrink-0">
-            Review Now
-          </button>
+          {!filterRevise ? (
+            <button
+              onClick={handleReviewNow}
+              className="px-4 py-2 bg-rose-400/10 text-rose-400 border border-rose-400/20 rounded-xl text-[10px] font-black uppercase tracking-widest hover:bg-rose-400 hover:text-white transition-all shrink-0"
+            >
+              Review Now
+            </button>
+          ) : (
+            <button
+              onClick={() => { setCards(initialCards); setCurrentIdx(0); setFilterRevise(false); setSessionLog([]); }}
+              className="px-4 py-2 bg-white/5 text-muted border border-white/10 rounded-xl text-[10px] font-black uppercase tracking-widest hover:bg-white/10 transition-all shrink-0"
+            >
+              Show All
+            </button>
+          )}
         </motion.div>
       )}
 
