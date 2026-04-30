@@ -1,9 +1,11 @@
 import { useState } from 'react';
 import { motion, AnimatePresence } from 'motion/react';
+import { useNavigate } from 'react-router-dom';
 import { useAuth, type UserRole } from '@/context/AuthContext';
 import { ArrowRight, Eye, EyeOff } from 'lucide-react';
 
 const roles: { id: UserRole; label: string; icon: string; demo: string; colorClass: string; gradient: string }[] = [
+  { id: 'admin',   label: 'Admin',   icon: '👑', demo: 'admin@edunexus.com', colorClass: 'admin',   gradient: 'from-rose-400 to-red-500' },
   { id: 'student', label: 'Student', icon: '🎒', demo: 'student@edunexus.com', colorClass: 'student', gradient: 'from-teal-400 to-sky-500' },
   { id: 'teacher', label: 'Teacher', icon: '👩‍🏫', demo: 'teacher@edunexus.com', colorClass: 'teacher', gradient: 'from-amber-400 to-orange-500' },
   { id: 'parent',  label: 'Parent',  icon: '👨‍👩‍👧', demo: 'parent@edunexus.com', colorClass: 'parent',  gradient: 'from-violet-400 to-pink-500'  },
@@ -11,8 +13,9 @@ const roles: { id: UserRole; label: string; icon: string; demo: string; colorCla
 
 const Login = () => {
   const { login } = useAuth();
-  const [selectedRole, setSelectedRole] = useState<UserRole>('student');
-  const [email, setEmail] = useState('student@edunexus.com');
+  const navigate = useNavigate();
+  const [selectedRole, setSelectedRole] = useState<UserRole>('admin');
+  const [email, setEmail] = useState('admin@edunexus.com');
   const [password, setPassword] = useState('password');
   const [showPass, setShowPass] = useState(false);
   const [error, setError] = useState('');
@@ -30,7 +33,11 @@ const Login = () => {
     setError('');
     await new Promise(r => setTimeout(r, 800));
     const ok = login(email, password, selectedRole);
-    if (!ok) setError('Invalid credentials. Select a role and use the pre-filled email.');
+    if (ok) {
+      navigate('/', { replace: true });
+    } else {
+      setError('Invalid credentials. Select a role and use the pre-filled email.');
+    }
     setLoading(false);
   };
 
@@ -61,18 +68,18 @@ const Login = () => {
           </div>
           <p className="text-muted/60 text-[11px] font-bold uppercase tracking-widest mb-10 ml-[60px] -mt-5">Intelligence Platform</p>
 
-          <div className="grid grid-cols-3 gap-2 mb-8">
+          <div className="grid grid-cols-4 gap-2 mb-8">
             {roles.map((r) => (
               <button
                 key={r.id}
                 onClick={() => handleRoleSelect(r.id)}
-                className={`flex flex-col items-center gap-2 p-4 rounded-2xl border transition-all duration-300 ${
+                className={`flex flex-col items-center gap-2 p-3 rounded-2xl border transition-all duration-300 ${
                   selectedRole === r.id
                     ? `bg-white/5 text-white scale-105 shadow-xl`
                     : 'border-white/5 bg-transparent text-muted/60 hover:border-white/10 hover:text-white'
                 }`}
                 style={{
-                   borderColor: selectedRole === r.id ? (r.id === 'student' ? '#2dd4bf' : r.id === 'teacher' ? '#f5c842' : '#a78bfa') : ''
+                   borderColor: selectedRole === r.id ? (r.id === 'admin' ? '#fb7185' : r.id === 'student' ? '#2dd4bf' : r.id === 'teacher' ? '#f5c842' : '#a78bfa') : ''
                 }}
               >
                 <span className="text-2xl">{r.icon}</span>
@@ -136,7 +143,7 @@ const Login = () => {
 
           <div className="mt-8 pt-6 border-t border-white/10 text-center">
             <p className="text-[11px] text-muted font-medium bg-white/5 py-3 rounded-xl px-4 inline-block">
-              Demo Access: <strong>student</strong> · <strong>teacher</strong> · <strong>parent</strong> <br/>
+              Demo Access: <strong>admin</strong> · <strong>student</strong> · <strong>teacher</strong> · <strong>parent</strong> <br/>
               Select role tab then press Sign In
             </p>
           </div>

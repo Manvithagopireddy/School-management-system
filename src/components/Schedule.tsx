@@ -3,8 +3,9 @@ import { motion, AnimatePresence } from 'motion/react';
 import { 
   Calendar, ChevronLeft, ChevronRight, 
   Clock, MoreVertical, Plus, Download, Share2,
-  X, Check, Trash2, Edit3, Bell
+  X, Check, Trash2, Edit3, Bell, Wand2
 } from 'lucide-react';
+import { generateAutoSchedule } from '../lib/algorithms/scheduler';
 
 /* ─── types ──────────────────────────────────────────────── */
 interface Lesson {
@@ -212,6 +213,8 @@ const DayView = ({ lessons, today, onEdit }: { lessons: Lesson[]; today: string;
 };
 
 /* ─── Main Component ─────────────────────────────────────── */
+import { API_BASE_URL } from '@/config/api';
+
 const Schedule = () => {
   const [lessons, setLessons]     = useState<Lesson[]>(INIT_LESSONS);
   const [view, setView]           = useState<'week' | 'day'>('week');
@@ -219,6 +222,18 @@ const Schedule = () => {
   const [weekOffset, setWeekOffset] = useState(0);
   const [modal, setModal]         = useState<{ open: boolean; lesson: Partial<Lesson> | null }>({ open: false, lesson: null });
   const [exportDone, setExportDone] = useState(false);
+  const [dbStatus, setDbStatus]   = useState<'loading' | 'live' | 'offline'>('loading');
+
+  // Load lessons from Spring Boot DB on mount
+  useEffect(() => {
+    fetch(`${API_BASE_URL}/schedule`)
+      .then(r => r.json())
+      .then((data: Lesson[]) => {
+        if (data.length > 0) { setLessons(data); setDbStatus('live'); }
+        else setDbStatus('offline');
+      })
+      .catch(() => setDbStatus('offline'));
+  }, []);
 
   const weekStart = new Date(2026, 3, 7 + weekOffset * 7); // Apr 7 base
   const weekEnd   = new Date(2026, 3, 12 + weekOffset * 7);
@@ -230,6 +245,12 @@ const Schedule = () => {
       return exists ? prev.map(l => l.id === lesson.id ? lesson : l) : [...prev, lesson];
     });
     setModal({ open: false, lesson: null });
+    // Persist to Spring Boot DB
+    fetch(`${API_BASE_URL}/schedule`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(lesson)
+    }).catch(console.warn);
   };
 
   const handleDelete = (id: string) => {
@@ -251,10 +272,23 @@ const Schedule = () => {
       {/* Header */}
       <div className="flex flex-col sm:flex-row justify-between items-start sm:items-end gap-4">
         <div>
-          <h2 className="text-4xl font-black font-serif tracking-tight text-white">Academic Timetable</h2>
+          <div className="flex items-center gap-3">
+            <h2 className="text-4xl font-black font-serif tracking-tight text-white">Academic Timetable</h2>
+            <span className={`text-[9px] font-black uppercase px-2 py-1 rounded-lg border ${
+              dbStatus === 'live'    ? 'text-teal-400 border-teal-400/30 bg-teal-400/10' :
+              dbStatus === 'offline' ? 'text-rose-400 border-rose-400/30 bg-rose-400/10' :
+                                      'text-muted border-white/10 bg-white/5'
+            }`}>{dbStatus === 'live' ? '● Live DB' : dbStatus === 'offline' ? '○ Offline' : '◌ Loading'}</span>
+          </div>
           <p className="text-muted font-medium mt-1">Session 2025-26 · Term 2 · <span className="text-primary font-bold">Grade 10-A</span></p>
         </div>
         <div className="flex gap-3">
+          <button
+             onClick={() => setLessons(generateAutoSchedule())}
+             className="flex items-center gap-2 border px-4 py-2.5 rounded-2xl text-xs font-bold transition-all bg-indigo-500/10 border-indigo-500/30 text-indigo-400 hover:bg-indigo-500 hover:text-white"
+          >
+             <Wand2 size={16} /> Auto-Gen
+          </button>
           <button
             onClick={handleExport}
             className={`flex items-center gap-2 border px-5 py-2.5 rounded-2xl text-xs font-bold transition-all ${

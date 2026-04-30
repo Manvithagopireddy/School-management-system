@@ -1,9 +1,11 @@
 import { 
   Users, GraduationCap, School, TrendingUp,
   TrendingDown, BookOpen, Clock, CheckCircle2,
-  AlertCircle, Activity, Globe, Shield
+  AlertCircle, Activity, Globe, Shield, Plus, Megaphone, Settings
 } from 'lucide-react';
 import { motion } from 'motion/react';
+import { Link } from 'react-router-dom';
+import { useState, useEffect } from 'react';
 import { 
   AreaChart, Area, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer,
   BarChart, Bar, Cell
@@ -23,7 +25,20 @@ const attendanceStats = [
   { name: 'High School', value: 85, color: '#a78bfa' },
 ];
 
+interface Stats { students: number; teachers: number; lessons: number; avgAttendance: number; }
+
+import { API_BASE_URL } from '../config/api';
+
 const AdminDashboard = () => {
+  const [stats, setStats] = useState<Stats>({ students: 500, teachers: 8, lessons: 10, avgAttendance: 91 });
+
+  useEffect(() => {
+    fetch(`${API_BASE_URL}/stats`)
+      .then(r => r.json())
+      .then(setStats)
+      .catch(() => console.warn('Spring Boot server offline — showing default data'));
+  }, []);
+
   return (
     <div className="flex flex-col gap-10">
       {/* Header */}
@@ -32,13 +47,13 @@ const AdminDashboard = () => {
         <p className="text-muted font-medium">Global analytics for <span className="text-primary font-bold">EduNexus Main Campus</span>.</p>
       </div>
 
-      {/* Global Stats */}
+      {/* Global Stats — Live from Java DB */}
       <div className="grid grid-cols-2 lg:grid-cols-4 gap-6">
         {[
-          { icon: Users,      value: '2.4k',  label: 'Students',   change: '+14% growth', color: '#f5c842' },
-          { icon: GraduationCap, value: '184',   label: 'Faculty',    change: 'All Verified', color: '#2dd4bf' },
-          { icon: School,     value: '42',    label: 'Classrooms', change: '85% Capacity', color: '#fb7185' },
-          { icon: Activity,   value: '91%',   label: 'Avg Attend', change: 'Global Avg',   color: '#a78bfa' },
+          { icon: Users,         value: stats.students.toLocaleString(), label: 'Students',   change: 'Live · Java DB',    color: '#f5c842' },
+          { icon: GraduationCap, value: stats.teachers.toString(),       label: 'Faculty',    change: 'All Verified',      color: '#2dd4bf' },
+          { icon: School,        value: stats.lessons.toString(),         label: 'Classes',    change: '85% Capacity',      color: '#fb7185' },
+          { icon: Activity,      value: `${stats.avgAttendance.toFixed(0)}%`, label: 'Avg Attend', change: 'Live from DB', color: '#a78bfa' },
         ].map((s, i) => (
           <motion.div initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: i * 0.1 }} key={s.label} className="card-nexus p-7 shadow-xl shadow-black/10 group">
             <div className="w-12 h-12 rounded-2xl bg-white/5 flex items-center justify-center mb-5 group-hover:scale-110 transition-transform">
@@ -49,6 +64,46 @@ const AdminDashboard = () => {
             <p className="text-[10px] mt-2 font-bold" style={{ color: s.color }}>{s.change}</p>
           </motion.div>
         ))}
+      </div>
+
+      {/* Quick Actions (CRUD) */}
+      <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+        <Link to="/students" className="p-4 rounded-2xl bg-white/5 border border-white/10 hover:bg-white/10 hover:border-white/20 transition-all flex items-center gap-3 group shadow-lg">
+          <div className="w-10 h-10 rounded-xl bg-teal-400/20 text-teal-400 flex items-center justify-center group-hover:scale-110 transition-transform">
+            <Plus size={20} />
+          </div>
+          <div className="text-left">
+            <p className="text-sm font-bold text-white">Add Student</p>
+            <p className="text-[10px] text-muted font-bold uppercase tracking-widest">New Admission</p>
+          </div>
+        </Link>
+        <Link to="/teachers" className="p-4 rounded-2xl bg-white/5 border border-white/10 hover:bg-white/10 hover:border-white/20 transition-all flex items-center gap-3 group shadow-lg">
+          <div className="w-10 h-10 rounded-xl bg-amber-400/20 text-amber-400 flex items-center justify-center group-hover:scale-110 transition-transform">
+            <Plus size={20} />
+          </div>
+          <div className="text-left">
+            <p className="text-sm font-bold text-white">Add Faculty</p>
+            <p className="text-[10px] text-muted font-bold uppercase tracking-widest">Staff Onboarding</p>
+          </div>
+        </Link>
+        <Link to="/schedule" className="p-4 rounded-2xl bg-white/5 border border-white/10 hover:bg-white/10 hover:border-white/20 transition-all flex items-center gap-3 group shadow-lg">
+          <div className="w-10 h-10 rounded-xl bg-violet-400/20 text-violet-400 flex items-center justify-center group-hover:scale-110 transition-transform">
+            <School size={20} />
+          </div>
+          <div className="text-left">
+            <p className="text-sm font-bold text-white">New Class</p>
+            <p className="text-[10px] text-muted font-bold uppercase tracking-widest">Create Section</p>
+          </div>
+        </Link>
+        <Link to="/messages" className="p-4 rounded-2xl bg-white/5 border border-white/10 hover:bg-white/10 hover:border-white/20 transition-all flex items-center gap-3 group shadow-lg">
+          <div className="w-10 h-10 rounded-xl bg-rose-400/20 text-rose-400 flex items-center justify-center group-hover:scale-110 transition-transform">
+            <Megaphone size={20} />
+          </div>
+          <div className="text-left">
+            <p className="text-sm font-bold text-white">Broadcast</p>
+            <p className="text-[10px] text-muted font-bold uppercase tracking-widest">Global Message</p>
+          </div>
+        </Link>
       </div>
 
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">

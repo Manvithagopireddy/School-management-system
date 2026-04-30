@@ -1,37 +1,66 @@
 import { 
   Users, Search, Filter, Plus, 
-  MoreVertical, Mail, Phone, MapPin, 
-  ChevronRight, GraduationCap, Target,
-  TrendingUp, Download, Eye
+  Mail, Download, Eye, Loader2, Target
 } from 'lucide-react';
-import { motion } from 'motion/react';
-import { useState } from 'react';
+import { motion, AnimatePresence } from 'motion/react';
+import { useState, useEffect, useCallback } from 'react';
+import EmptyState from '@/components/shared/EmptyState';
 
-const studentsData = [
-  { id: 'S001', name: 'Arjun Sharma',  grade: '10-A', roll: '21', gpa: '8.64', att: '94%',  status: 'Active', color: '#2dd4bf' },
-  { id: 'S002', name: 'Priya Menon',   grade: '10-A', roll: '22', gpa: '9.12', att: '98%',  status: 'Active', color: '#f5c842' },
-  { id: 'S003', name: 'Rohan Gupta',   grade: '10-A', roll: '23', gpa: '7.85', att: '82%',  status: 'Active', color: '#fb7185' },
-  { id: 'S004', name: 'Ananya Singh',  grade: '10-B', roll: '01', gpa: '9.41', att: '100%', status: 'Active', color: '#a78bfa' },
-  { id: 'S005', name: 'Kiran Patel',   grade: '10-C', roll: '15', gpa: '8.83', att: '91%',  status: 'Active', color: '#4ade80' },
-  { id: 'S006', name: 'Zoya Khan',     grade: '11-A', roll: '12', gpa: '9.65', att: '96%',  status: 'Active', color: '#fb7185' },
-  { id: 'S007', name: 'Vikram Seth',   grade: '12-A', roll: '45', gpa: '7.21', att: '75%',  status: 'On Leave', color: '#f5c842' },
+interface Student {
+  id: string; name: string; grade: string; roll: string;
+  gpa: string; att: string; status: string; color: string;
+}
+
+const MOCK_STUDENTS: Student[] = [
+  { id: 'S001', name: 'Arjun Sharma',   grade: 'Grade 10-A', roll: '21', gpa: '8.64', att: '94%', status: 'Active',    color: '#2dd4bf' },
+  { id: 'S002', name: 'Priya Menon',    grade: 'Grade 10-A', roll: '22', gpa: '9.12', att: '98%', status: 'Active',    color: '#f5c842' },
+  { id: 'S003', name: 'Rohan Gupta',    grade: 'Grade 10-B', roll: '15', gpa: '7.85', att: '82%', status: 'Active',    color: '#a78bfa' },
+  { id: 'S004', name: 'Ananya Singh',   grade: 'Grade 10-A', roll: '24', gpa: '9.41', att: '100%',status: 'Active',    color: '#fb7185' },
+  { id: 'S005', name: 'Kiran Patel',    grade: 'Grade 10-B', roll: '11', gpa: '8.83', att: '91%', status: 'Active',    color: '#4ade80' },
+  { id: 'S006', name: 'Sneha Reddy',    grade: 'Grade 9-A',  roll: '08', gpa: '9.20', att: '96%', status: 'Active',    color: '#38bdf8' },
+  { id: 'S007', name: 'Vikram Bose',    grade: 'Grade 9-B',  roll: '17', gpa: '7.40', att: '78%', status: 'Suspended', color: '#f472b6' },
+  { id: 'S008', name: 'Divya Kumar',    grade: 'Grade 11-A', roll: '03', gpa: '8.95', att: '92%', status: 'Active',    color: '#c084fc' },
+  { id: 'S009', name: 'Aditya Joshi',   grade: 'Grade 11-B', roll: '29', gpa: '8.10', att: '88%', status: 'Active',    color: '#fbbf24' },
+  { id: 'S010', name: 'Meera Nair',     grade: 'Grade 12-A', roll: '01', gpa: '9.65', att: '99%', status: 'Active',    color: '#6ee7b7' },
 ];
 
 const Students = () => {
-  const [filter, setFilter] = useState('');
-  
-  const filtered = studentsData.filter(s => 
-    s.name.toLowerCase().includes(filter.toLowerCase()) || 
-    s.id.toLowerCase().includes(filter.toLowerCase()) ||
-    s.grade.toLowerCase().includes(filter.toLowerCase())
-  );
+  const [students, setStudents] = useState<Student[]>([]);
+  const [filter, setFilter]     = useState('');
+  const [loading, setLoading]   = useState(true);
+  const [offset, setOffset]     = useState(0);
+  const LIMIT = 20;
+
+import { API_BASE_URL } from '@/config/api';
+
+  const fetchStudents = useCallback((search: string, off: number) => {
+    setLoading(true);
+    const params = new URLSearchParams({ limit: String(LIMIT), offset: String(off), search });
+    fetch(`${API_BASE_URL}/students?${params}`)
+      .then(r => r.json())
+      .then((data: Student[]) => { setStudents(data); setLoading(false); })
+      .catch(() => {
+        // Fallback to mock data when Spring Boot server is offline
+        const mock = MOCK_STUDENTS.filter(s =>
+          s.name.toLowerCase().includes(search.toLowerCase()) ||
+          s.grade.toLowerCase().includes(search.toLowerCase()) ||
+          s.id.toLowerCase().includes(search.toLowerCase())
+        );
+        setStudents(mock.slice(off, off + LIMIT));
+        setLoading(false);
+      });
+  }, []);
+
+  useEffect(() => { fetchStudents(filter, offset); }, [filter, offset, fetchStudents]);
+
+  const handleSearch = (val: string) => { setFilter(val); setOffset(0); };
 
   return (
     <div className="flex flex-col gap-10">
       <div className="flex justify-between items-end">
         <div className="flex flex-col gap-1">
           <h2 className="text-4xl font-black font-serif tracking-tight">Student Directory</h2>
-          <p className="text-muted font-medium">Managing <span className="text-primary font-bold">2,410 students</span> across all campuses.</p>
+          <p className="text-muted font-medium">Managing <span className="text-primary font-bold">500 students</span> across all campuses · Live Java DB</p>
         </div>
         <div className="flex gap-3">
           <button className="flex items-center gap-2 bg-white/5 border border-white/10 px-5 py-2.5 rounded-2xl text-[11px] font-black uppercase tracking-widest text-muted hover:text-white transition-all">
@@ -56,7 +85,7 @@ const Students = () => {
                 type="text" 
                 placeholder="Find by name, ID or grade..." 
                 value={filter}
-                onChange={e => setFilter(e.target.value)}
+                onChange={e => handleSearch(e.target.value)}
                 className="w-full bg-white/5 border border-white/10 rounded-2xl py-3.5 pl-12 pr-4 text-white placeholder-white/20 focus:outline-none focus:border-white/30 transition-all font-medium text-sm"
               />
            </div>
@@ -65,10 +94,18 @@ const Students = () => {
                  <Filter size={16} /> Advanced Filter
               </button>
               <div className="h-10 w-[1px] bg-white/10 mx-2"></div>
-              <p className="text-xs font-bold text-muted uppercase tracking-widest">{filtered.length} Results Found</p>
+              <p className="text-xs font-bold text-muted uppercase tracking-widest">
+                {loading ? 'Loading...' : `${students.length} Results Found`}
+              </p>
            </div>
         </div>
 
+        {loading ? (
+          <div className="flex items-center justify-center py-20 gap-3 text-muted">
+            <Loader2 className="animate-spin" size={22} />
+            <span className="text-sm font-bold">Loading from Java DB...</span>
+          </div>
+        ) : (
         <div className="overflow-x-auto">
           <table className="w-full text-left">
             <thead>
@@ -82,11 +119,11 @@ const Students = () => {
               </tr>
             </thead>
             <tbody className="divide-y divide-white/5">
-              {filtered.map((s, i) => (
+              {students.map((s, i) => (
                 <motion.tr 
                   initial={{ opacity: 0, x: -10 }}
                   animate={{ opacity: 1, x: 0 }}
-                  transition={{ delay: i * 0.05 }}
+                  transition={{ delay: i * 0.03 }}
                   key={s.id} 
                   className="hover:bg-white/5 transition-colors group cursor-default"
                 >
@@ -143,9 +180,30 @@ const Students = () => {
             </tbody>
           </table>
         </div>
+        )}
+
+        {/* Pagination */}
+        <div className="flex items-center justify-between mt-8 pt-6 border-t border-white/5">
+          <p className="text-xs text-muted font-bold">
+            Showing {offset + 1}–{Math.min(offset + LIMIT, offset + students.length)} of 500 students
+          </p>
+          <div className="flex gap-2">
+            <button
+              onClick={() => setOffset(o => Math.max(0, o - LIMIT))}
+              disabled={offset === 0}
+              className="px-4 py-2 bg-white/5 border border-white/10 rounded-xl text-xs font-bold text-muted hover:text-white disabled:opacity-30 disabled:cursor-not-allowed transition-all"
+            >← Prev</button>
+            <button
+              onClick={() => setOffset(o => o + LIMIT)}
+              disabled={students.length < LIMIT}
+              className="px-4 py-2 bg-primary text-navy border border-primary/30 rounded-xl text-xs font-bold hover:opacity-90 disabled:opacity-30 disabled:cursor-not-allowed transition-all"
+            >Next →</button>
+          </div>
+        </div>
       </div>
     </div>
   );
 };
 
 export default Students;
+

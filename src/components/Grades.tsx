@@ -4,6 +4,7 @@ import {
   Star, TrendingDown, ClipboardList
 } from 'lucide-react';
 import { motion } from 'motion/react';
+import { useState, useEffect } from 'react';
 
 const GradeCard = ({ subject, pct, letter, color }: { subject: string, pct: number, letter: string, color: string }) => (
   <div className="card-nexus p-6 text-center border-b-4" style={{ borderColor: color }}>
@@ -31,7 +32,22 @@ const ProgressBarWithLabel = ({ label, pct, color }: { label: string, pct: numbe
   </div>
 );
 
+import { API_BASE_URL } from '@/config/api';
+
 const Grades = () => {
+  const [predictedData, setPredictedData] = useState<any[]>([]);
+  const [error, setError] = useState('');
+
+  useEffect(() => {
+    fetch(`${API_BASE_URL}/grades/predict`)
+      .then(res => res.json())
+      .then(data => setPredictedData(data))
+      .catch(err => {
+        console.error(err);
+        setError('Spring Boot Algorithm Service is offline! Run the backend application.');
+      });
+  }, []);
+
   return (
     <div className="flex flex-col gap-10">
       <div className="flex justify-between items-end">
@@ -130,16 +146,39 @@ const Grades = () => {
         {/* Progress Sidebar */}
         <div className="card-nexus p-8 flex flex-col gap-8 shadow-2xl">
            <div className="flex justify-between items-center mb-2">
-              <h3 className="text-lg font-bold font-serif leading-none">Learning Trends</h3>
+              <h3 className="text-lg font-bold font-serif leading-none">Learning Trends (Predicted)</h3>
               <History size={18} className="text-muted" />
            </div>
            
-           <div className="flex-1 space-y-2">
-             <ProgressBarWithLabel label="Mathematical Analysis" pct={91} color="#f5c842" />
-             <ProgressBarWithLabel label="Scientific Reasoning" pct={85} color="#2dd4bf" />
-             <ProgressBarWithLabel label="Linguistic Ability"    pct={94} color="#fb7185" />
-             <ProgressBarWithLabel label="Computational Logic"   pct={96} color="#a78bfa" />
-             <ProgressBarWithLabel label="Biological Concepts"   pct={78} color="#4ade80" />
+           <div className="flex-1 space-y-4">
+             {error ? (
+                <div className="p-4 bg-rose-500/10 border border-rose-500/30 rounded-xl text-xs text-rose-200">
+                  {error}
+                </div>
+             ) : predictedData.length === 0 ? (
+                <div className="flex items-center justify-center p-8 text-muted text-xs">Running Java Algorithm...</div>
+             ) : (
+                predictedData.map(trend => (
+               <div key={trend.subject}>
+                 <div className="flex justify-between items-center mb-2">
+                   <span className="text-sm font-bold text-white/80">{trend.subject} <span className="text-[10px] text-muted ml-1 opacity-60">(Proj. Next Term)</span></span>
+                   <div className="flex items-center gap-2">
+                     {trend.trend === 'up' && <TrendingUp size={14} className="text-emerald-400" />}
+                     {trend.trend === 'down' && <TrendingDown size={14} className="text-rose-400" />}
+                     <span className="text-xs font-black" style={{ color: trend.color }}>{trend.predictedNextTerm}%</span>
+                   </div>
+                 </div>
+                 <div className="h-2 w-full bg-white/5 rounded-full overflow-hidden border border-white/5 shadow-inner">
+                    <motion.div 
+                       initial={{ width: 0 }}
+                       animate={{ width: `${trend.predictedNextTerm}%` }}
+                       transition={{ duration: 1.2 }}
+                       className="h-full rounded-full"
+                       style={{ background: `linear-gradient(90deg, ${trend.color}, ${trend.color}88)`, boxShadow: `0 0 10px ${trend.color}44` }}
+                    />
+                 </div>
+               </div>
+             )))}
            </div>
 
            <div className="mt-4 p-6 rounded-3xl bg-primary/5 border border-primary/20 text-center relative overflow-hidden group">

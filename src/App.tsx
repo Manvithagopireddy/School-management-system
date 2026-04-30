@@ -21,7 +21,12 @@ import {
   Mic,
   Activity,
   Layout,
-  ShieldCheck
+  ShieldCheck,
+  Shield,
+  BarChart3,
+  UserCog,
+  Cog,
+  CheckCircle2
 } from 'lucide-react';
 import { motion, AnimatePresence } from 'motion/react';
 import { useState } from 'react';
@@ -50,6 +55,11 @@ import AIChat from '@/components/AIChat';
 import Grades from '@/components/Grades';
 import Fees from '@/components/Fees';
 import Attendance from '@/components/Attendance';
+// Admin-only pages
+import UserManagement from '@/components/admin/UserManagement';
+import SystemSettings from '@/components/admin/SystemSettings';
+import Reports from '@/components/admin/Reports';
+import CampusAI from '@/components/CampusAI';
 
 const SidebarItem = ({ icon: Icon, label, path, active, badge }: { icon: any, label: string, path: string, active: boolean, badge?: number }) => (
   <Link to={path}>
@@ -86,13 +96,24 @@ const App = () => {
     admin: [
       { section: 'Global Overview', items: [
         { id: 'dashboard', icon: LayoutDashboard, label: 'Control Center', path: '/' },
-        { id: 'students', icon: Users, label: 'Student Mgmt', path: '/students' },
-        { id: 'teachers', icon: GraduationCap, label: 'Staff Directory', path: '/teachers' },
+        { id: 'students',  icon: Users,           label: 'Student Mgmt',   path: '/students' },
+        { id: 'teachers',  icon: GraduationCap,   label: 'Staff Directory', path: '/teachers' },
       ]},
       { section: 'Academic Hub', items: [
-        { id: 'schedule', icon: Calendar, label: 'Global Schedule', path: '/schedule' },
-        { id: 'messages', icon: MessageSquare, label: 'System Comms', path: '/messages', badge: 5 },
-      ]}
+        { id: 'schedule',   icon: Calendar,      label: 'Global Schedule', path: '/schedule' },
+        { id: 'attendance', icon: CheckCircle2,  label: 'Attendance',      path: '/attendance' },
+        { id: 'grades',     icon: Target,        label: 'Grade Book',      path: '/grades' },
+        { id: 'messages',   icon: MessageSquare, label: 'System Comms',    path: '/messages', badge: 5 },
+      ]},
+      { section: 'Finance & Ops', items: [
+        { id: 'fees',    icon: CreditCard, label: 'Fee Management', path: '/fees' },
+        { id: 'reports', icon: BarChart3,  label: 'Reports',        path: '/reports' },
+      ]},
+      { section: 'Admin Tools', items: [
+        { id: 'campus-ai',icon: Brain,         label: 'Campus AI (DSA)', path: '/campus-ai' },
+        { id: 'users',    icon: UserCog,       label: 'User Management', path: '/users' },
+        { id: 'settings', icon: Cog,           label: 'System Settings', path: '/system-settings' },
+      ]},
     ],
     student: [
       { section: 'Main Console', items: [
@@ -269,6 +290,11 @@ const App = () => {
             <Route path="/grades" element={<Grades />} />
             <Route path="/fees" element={<Fees />} />
             <Route path="/attendance" element={<Attendance />} />
+            {/* Admin-only routes */}
+            <Route path="/users" element={<UserManagement />} />
+            <Route path="/reports" element={<Reports />} />
+            <Route path="/system-settings" element={<SystemSettings />} />
+            <Route path="/campus-ai" element={<CampusAI />} />
             
             {/* Catch-all for coming soon */}
             <Route path="*" element={<div className="flex items-center justify-center h-full text-muted font-serif italic text-2xl">Module under development...</div>} />

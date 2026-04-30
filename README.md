@@ -1,73 +1,42 @@
-# React + TypeScript + Vite
+# EduNexus School Management System
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+A high-end, premium school management platform built with React and Spring Boot.
 
-Currently, two official plugins are available:
+## Architecture
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Babel](https://babeljs.io/) (or [oxc](https://oxc.rs) when used in [rolldown-vite](https://vite.dev/guide/rolldown)) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+### Frontend (React + TypeScript)
+- **Vite**: Ultra-fast build tool.
+- **Lucide React**: For beautiful iconography.
+- **Motion (framer-motion)**: For smooth, premium animations.
+- **Tailwind CSS**: For modern styling.
 
-## React Compiler
+### Backend (Java + Spring Boot)
+- **Spring Boot 3**: Enterprise-grade Java framework.
+- **Spring Data JPA**: For database interaction.
+- **SQLite**: Portable database storage.
+- **DSA & Algorithms**:
+    - **Linear Regression**: Predicts student performance for next terms.
+    - **Dijkstra's Algorithm**: Calculates the shortest route between campus buildings.
+    - **BFS (Breadth-First Search)**: Maps subject dependencies for learning paths.
 
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
+## Getting Started
 
-## Expanding the ESLint configuration
-
-If you are developing a production application, we recommend updating the configuration to enable type-aware lint rules:
-
-```js
-export default defineConfig([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
-
-      // Remove tseslint.configs.recommended and replace with this
-      tseslint.configs.recommendedTypeChecked,
-      // Alternatively, use this for stricter rules
-      tseslint.configs.strictTypeChecked,
-      // Optionally, add this for stylistic rules
-      tseslint.configs.stylisticTypeChecked,
-
-      // Other configs...
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
+### 1. Run the Backend
+Navigate to the `backend` directory and run:
+```bash
+mvn spring-boot:run
 ```
+The backend will start on `http://localhost:8081`.
 
-You can also install [eslint-plugin-react-x](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-x) and [eslint-plugin-react-dom](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-dom) for React-specific lint rules:
-
-```js
-// eslint.config.js
-import reactX from 'eslint-plugin-react-x'
-import reactDom from 'eslint-plugin-react-dom'
-
-export default defineConfig([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
-      // Enable lint rules for React
-      reactX.configs['recommended-typescript'],
-      // Enable lint rules for React DOM
-      reactDom.configs.recommended,
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
+### 2. Run the Frontend
+In the root directory, run:
+```bash
+npm install
+npm run dev
 ```
+The frontend will start on `http://localhost:5173`.
+
+## New Features
+- **Campus AI (DSA)**: Explore the power of algorithms in school management.
+- **Real-time Analytics**: Live stats fetched from the Java backend.
+- **Academic Predictions**: AI-driven grade forecasting.
