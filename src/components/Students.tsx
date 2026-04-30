@@ -5,6 +5,7 @@ import {
 import { motion, AnimatePresence } from 'motion/react';
 import { useState, useEffect, useCallback } from 'react';
 import EmptyState from '@/components/shared/EmptyState';
+import { API_BASE_URL } from '@/config/api';
 
 interface Student {
   id: string; name: string; grade: string; roll: string;
@@ -31,7 +32,7 @@ const Students = () => {
   const [offset, setOffset]     = useState(0);
   const LIMIT = 20;
 
-import { API_BASE_URL } from '@/config/api';
+
 
   const fetchStudents = useCallback((search: string, off: number) => {
     setLoading(true);

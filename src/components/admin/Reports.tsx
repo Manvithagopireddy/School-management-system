@@ -109,7 +109,7 @@ const Reports = () => {
                 <YAxis axisLine={false} tickLine={false} tick={{ fontSize: 10, fill: 'var(--muted)' }} tickFormatter={v => `₹${(v/1000).toFixed(0)}k`} />
                 <Tooltip
                   contentStyle={{ backgroundColor: 'rgb(30,53,96)', border: '1px solid rgba(255,255,255,0.1)', borderRadius: '16px', fontSize: '13px' }}
-                  formatter={(v: number) => [`₹${(v/1000).toFixed(0)}k`]}
+                  formatter={(v: any) => [`₹${(Number(v)/1000).toFixed(0)}k`]}
                 />
                 <Bar dataKey="collected" name="Collected" fill="#f5c842" radius={[6, 6, 0, 0]} />
                 <Bar dataKey="pending"   name="Pending"   fill="#fb718540" radius={[6, 6, 0, 0]} />
@@ -131,7 +131,7 @@ const Reports = () => {
                 <CartesianGrid strokeDasharray="3 3" stroke="rgba(255,255,255,0.03)" vertical={false} />
                 <XAxis dataKey="week" axisLine={false} tickLine={false} tick={{ fontSize: 11, fill: 'var(--muted)', fontWeight: 600 }} />
                 <YAxis domain={[75, 100]} axisLine={false} tickLine={false} tick={{ fontSize: 10, fill: 'var(--muted)' }} tickFormatter={v => `${v}%`} />
-                <Tooltip contentStyle={{ backgroundColor: 'rgb(30,53,96)', border: '1px solid rgba(255,255,255,0.1)', borderRadius: '16px', fontSize: '13px' }} formatter={(v: number) => [`${v}%`]} />
+                <Tooltip contentStyle={{ backgroundColor: 'rgb(30,53,96)', border: '1px solid rgba(255,255,255,0.1)', borderRadius: '16px', fontSize: '13px' }} formatter={(v: any) => [`${v}%`]} />
                 <Line type="monotone" dataKey="primary"   name="Primary"   stroke="#f5c842" strokeWidth={3} dot={false} />
                 <Line type="monotone" dataKey="secondary" name="Secondary" stroke="#2dd4bf" strokeWidth={3} dot={false} />
                 <Line type="monotone" dataKey="high"      name="High School" stroke="#a78bfa" strokeWidth={3} dot={false} />
@@ -154,7 +154,7 @@ const Reports = () => {
                   <Pie data={gradeDistrib} cx="50%" cy="50%" innerRadius={60} outerRadius={100} paddingAngle={4} dataKey="value">
                     {gradeDistrib.map((entry, i) => <Cell key={i} fill={entry.color} />)}
                   </Pie>
-                  <Tooltip contentStyle={{ backgroundColor: 'rgb(30,53,96)', border: '1px solid rgba(255,255,255,0.1)', borderRadius: '12px', fontSize: '13px' }} formatter={(v: number) => [`${v}%`]} />
+                  <Tooltip contentStyle={{ backgroundColor: 'rgb(30,53,96)', border: '1px solid rgba(255,255,255,0.1)', borderRadius: '12px', fontSize: '13px' }} formatter={(v: any) => [`${v}%`]} />
                   <Legend iconType="circle" formatter={value => <span className="text-[11px] text-muted">{value}</span>} />
                 </PieChart>
               </ResponsiveContainer>

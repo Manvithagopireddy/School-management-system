@@ -10,6 +10,7 @@ import {
   AreaChart, Area, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer,
   BarChart, Bar, Cell
 } from 'recharts';
+import { API_BASE_URL } from '@/config/api';
 
 const enrolmentData = [
   { name: '2021', students: 850 },
@@ -27,7 +28,7 @@ const attendanceStats = [
 
 interface Stats { students: number; teachers: number; lessons: number; avgAttendance: number; }
 
-import { API_BASE_URL } from '../config/api';
+
 
 const AdminDashboard = () => {
   const [stats, setStats] = useState<Stats>({ students: 500, teachers: 8, lessons: 10, avgAttendance: 91 });

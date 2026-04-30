@@ -5,6 +5,7 @@ import {
 } from 'lucide-react';
 import { motion } from 'motion/react';
 import { useState, useEffect } from 'react';
+import { API_BASE_URL } from '@/config/api';
 
 const GradeCard = ({ subject, pct, letter, color }: { subject: string, pct: number, letter: string, color: string }) => (
   <div className="card-nexus p-6 text-center border-b-4" style={{ borderColor: color }}>
@@ -32,7 +33,7 @@ const ProgressBarWithLabel = ({ label, pct, color }: { label: string, pct: numbe
   </div>
 );
 
-import { API_BASE_URL } from '@/config/api';
+
 
 const Grades = () => {
   const [predictedData, setPredictedData] = useState<any[]>([]);

@@ -6,6 +6,7 @@ import {
   X, Check, Trash2, Edit3, Bell, Wand2
 } from 'lucide-react';
 import { generateAutoSchedule } from '../lib/algorithms/scheduler';
+import { API_BASE_URL } from '@/config/api';
 
 /* ─── types ──────────────────────────────────────────────── */
 interface Lesson {
@@ -213,7 +214,6 @@ const DayView = ({ lessons, today, onEdit }: { lessons: Lesson[]; today: string;
 };
 
 /* ─── Main Component ─────────────────────────────────────── */
-import { API_BASE_URL } from '@/config/api';
 
 const Schedule = () => {
   const [lessons, setLessons]     = useState<Lesson[]>(INIT_LESSONS);
