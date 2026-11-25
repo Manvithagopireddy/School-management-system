@@ -1,6 +1,6 @@
 # EduNexus School Management System
 
-A high-end, premium school management platform built with React and Spring Boot.
+A full-stack school management portfolio project built with React, TypeScript and Java Spring Boot. It explores academic analytics and practical applications of graph algorithms.
 
 ## Architecture
 
@@ -21,6 +21,8 @@ A high-end, premium school management platform built with React and Spring Boot.
 
 ## Getting Started
 
+Prerequisites: Node.js and npm, a JDK compatible with the backend Maven configuration, and Maven. Run the frontend and backend in separate terminals.
+
 ### 1. Run the Backend
 Navigate to the `backend` directory and run:
 ```bash
@@ -40,3 +42,17 @@ The frontend will start on `http://localhost:5173`.
 - **Campus AI (DSA)**: Explore the power of algorithms in school management.
 - **Real-time Analytics**: Live stats fetched from the Java backend.
 - **Academic Predictions**: AI-driven grade forecasting.
+
+## Architecture at a glance
+
+```mermaid
+flowchart LR
+  A[React frontend] --> B[Spring Boot backend]
+  B --> C[Spring Data JPA]
+  C --> D[(SQLite)]
+  B --> E[Algorithmic features]
+```
+
+## Scope and limitations
+
+This is a portfolio demonstration. Grade forecasts are illustrative, not validated educational predictions. Before real school deployment, review authentication, authorization, student privacy, accessibility and backup procedures.
